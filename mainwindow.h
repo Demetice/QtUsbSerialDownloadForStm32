@@ -16,6 +16,17 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
+    enum DOWNLOAD_STATUS_S
+    {
+      E_DOWNLOAD_STATUS_NONE = 0,
+      E_DOWNLOAD_STATUS_PREPARE = 1,
+      E_DOWNLOAD_STATUS_READY = 2,
+      E_DOWNLOAD_STATUS_DOWNLOADING = 3,
+      E_DOWNLOAD_STATUS_COMPLETE = 4,
+      E_DOWNLOAD_STATUS_SUCCESS = 5,
+      E_DOWNLOAD_STATUS_BUTT,
+    };
+
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     void writeData(const QByteArray &data);
@@ -41,13 +52,15 @@ private slots:
     void on_btnConnect_clicked();
     void EndDownload(void);
 
+    void on_btnClear_clicked();
+
 private:
     Ui::MainWindow *ui;
     QSerialPort *serial;
     UpDateThread *UpThread;
     QTimer *timer;
     qint32 ulNum;
-    bool downloading;
+    DOWNLOAD_STATUS_S downloading;
     QByteArray btData;
 };
 

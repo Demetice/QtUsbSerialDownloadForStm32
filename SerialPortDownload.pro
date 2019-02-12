@@ -27,12 +27,16 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    mydialog.cpp
+    mydialog.cpp \
+    crc32.c \
+    iapcmd.cpp
 
 HEADERS += \
         mainwindow.h \
     mydialog.h \
-    log.h
+    log.h \
+    crc32.h \
+    iapcmd.h
 
 FORMS += \
         mainwindow.ui \
