@@ -26,6 +26,7 @@ public:
     void packet(char *buf, int len, int *outLen, char *out);
     void ConstructStartPkt(char *buf, int *len, unsigned long fileSize, unsigned long crc32);
     void ConstructEndPkt(char *buf, int *len);
+    void ConstructResetPkt(char *buf, int *len);
 private:
     void addPktTail(char *out, int len);
 };

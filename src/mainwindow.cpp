@@ -90,9 +90,8 @@ void MainWindow::setProgressRange(int value)
 
 void MainWindow::on_btnDownload_clicked()
 {
-    StartDownload();
-    timer->start(100);
-    ulNum = 0;
+    ResetMCU();
+
     ui->btnChooseFile->setEnabled(false);
     ui->btnDownload->setEnabled(false);
     ui->comboBox->setEnabled(false);
@@ -144,14 +143,21 @@ void MainWindow::readData()
     char *cmd = temp.data();
 
     if (downloading == E_DOWNLOAD_STATUS_DOWNLOADING
-            && cmd[0] == 'c'
-            && cmd[1] == 0xd
-            && cmd[2] == 0xa)
+            && cmd[0] == 'c')
     {
         timer->start(5);
         return;
     }
 
+    if (downloading == E_DOWNLOAD_STATUS_PREPARE && temp.size() > 12)
+    {
+        //have msg Bootload start.
+        if(cmd[0] == 'B' && cmd[1] == 'o'
+           && cmd[9] == 's')
+        {
+            StartDownload();
+        }
+    }
 
     if(!temp.isEmpty()){
         if(ui->checkBox->isChecked())
@@ -199,6 +205,22 @@ void MainWindow::on_btnConnect_clicked()
     }
 }
 
+void MainWindow::ResetMCU(void)
+{
+    char buf[256] = {0};
+    int len = 0;
+
+    iapCmd iap;
+
+    iap.ConstructResetPkt(buf, &len);
+
+    qDebug("Sent commond to reset MCU");
+
+    serial->write(buf, len);
+
+    downloading = E_DOWNLOAD_STATUS_PREPARE;
+}
+
 void MainWindow::StartDownload(void)
 {
     char buf[256] = {0};
@@ -216,6 +238,9 @@ void MainWindow::StartDownload(void)
     serial->write(buf, len);
 
     downloading = E_DOWNLOAD_STATUS_DOWNLOADING;
+
+    timer->start(100);
+    ulNum = 0;
 }
 
 void MainWindow::EndDownload(void)

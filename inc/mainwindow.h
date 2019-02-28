@@ -51,7 +51,7 @@ private slots:
     void timerTransDate();
     void on_btnConnect_clicked();
     void EndDownload(void);
-
+    void ResetMCU(void);
     void on_btnClear_clicked();
 
 private:

@@ -83,3 +83,22 @@ void iapCmd::ConstructEndPkt(char *buf, int *len)
 
     addPktTail(buf, num);
 }
+
+void iapCmd::ConstructResetPkt(char *buf, int *len)
+{
+    IAD_CMD_HDR_S hdr;
+    int num = 0;
+
+    hdr.cmd = E_IAP_CMD_BOOT_AND_RESET;
+    hdr.ver = 0;
+    hdr.start = 0x80;
+    hdr.len = sizeof(unsigned long) * 2;
+    *len = hdr.len + 2;
+
+    memcpy(buf, &hdr, sizeof(hdr));
+    num += sizeof(hdr);
+    memset(buf + num, 0, sizeof(unsigned long));
+    num += sizeof(unsigned long);
+
+    addPktTail(buf, num);
+}
